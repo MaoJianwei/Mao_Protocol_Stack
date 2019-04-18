@@ -54,16 +54,16 @@ void *startPort(void *portName) {
 
         size = sendto(sockFd, pkt->getRawFrame(), size, 0, (struct sockaddr *) &device, sizeof(device));
 
-        if (++count % 1 == 0)
+        if (++count % 10 == 0) {
             printf("========= %s ========= %u ========= %u ========= %u =========\n", (char *) portName, count, size, errno);
 
-        char *summary = pkt->toString();
-        printf("%s", summary);
+            char *summary = pkt->toString();
+            printf("%s", summary);
+            delete[] summary;
+        }
 
-        delete[] summary;
         delete pkt;
     }
-
 }
 
 int main(int argc, char *argv[]) {
@@ -72,7 +72,6 @@ int main(int argc, char *argv[]) {
     std::cin.tie(0);
 
     pthread_t thread[10] = {0};
-
 
     int ret = 0;
     ret += pthread_create(thread, nullptr, startPort, (void *) "ens160");
